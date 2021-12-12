@@ -28,7 +28,7 @@
  * @module material
  */
 
-import { EDITOR, JSB } from 'internal:constants';
+import { EDITOR, JSB, TEST } from 'internal:constants';
 import { Root } from '../../root';
 import { TextureBase } from '../../assets/texture-base';
 import { builtinResMgr } from '../../builtin/builtin-res-mgr';
@@ -49,6 +49,7 @@ import { errorID } from '../../platform/debug';
 import { PassHandle, PassView, NULL_HANDLE, PassPool } from './memory-pools';
 import { InstancedBuffer } from '../../pipeline/instanced-buffer';
 import { BatchedBuffer } from '../../pipeline/batched-buffer';
+import { Filter, Address, SamplerInfo } from '../../gfx';
 
 export interface IPassInfoFull extends EffectAsset.IPassInfo {
     // generated part
@@ -485,6 +486,22 @@ export class Pass {
         const texName = value ? `${value as string}-texture` : getDefaultFromType(type) as string;
         const textureBase = builtinResMgr.get<TextureBase>(texName);
         const texture = textureBase && textureBase.getGFXTexture()!;
+        if (TEST) {
+            const samplerHash = new SamplerInfo(
+                Filter.LINEAR,
+                Filter.LINEAR,
+                Filter.NONE,
+                Address.CLAMP,
+                Address.CLAMP,
+                Address.CLAMP,
+            );
+
+            console.log('Processing:' + name);
+
+            if (info.samplerHash === undefined) {
+                info.samplerHash = Sampler.computeHash(samplerHash);
+            }
+        }
         const samplerInfo = info && info.samplerHash !== undefined
             ? Sampler.unpackFromHash(info.samplerHash) : textureBase && textureBase.getSamplerInfo();
         const sampler = this._device.getSampler(samplerInfo);
