@@ -736,6 +736,7 @@ export class Director extends EventTarget {
         this._root = new Root(game._gfxDevice!);
         const rootInfo = {};
         return this._root.initialize(rootInfo).catch((error) => {
+            console.log('ERROR: ' + error);
             errorID(1217);
             return Promise.reject(error);
         });
