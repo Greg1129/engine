@@ -487,22 +487,22 @@ export class Pass {
         const texName = value ? `${value as string}-texture` : getDefaultFromType(type) as string;
         const textureBase = builtinResMgr.get<TextureBase>(texName);
         const texture = textureBase && textureBase.getGFXTexture()!;
-        if (TEST) {
-            const samplerHash = new SamplerInfo(
-                Filter.LINEAR,
-                Filter.LINEAR,
-                Filter.NONE,
-                Address.CLAMP,
-                Address.CLAMP,
-                Address.CLAMP,
-            );
+        // if (TEST) {
+        //     const samplerHash = new SamplerInfo(
+        //         Filter.LINEAR,
+        //         Filter.LINEAR,
+        //         Filter.NONE,
+        //         Address.CLAMP,
+        //         Address.CLAMP,
+        //         Address.CLAMP,
+        //     );
 
-            console.log('Processing:' + name);
+        //     console.log('Processing:' + name);
 
-            if (info.samplerHash === undefined) {
-                info.samplerHash = Sampler.computeHash(samplerHash);
-            }
-        }
+        //     if (info.samplerHash === undefined) {
+        //         info.samplerHash = Sampler.computeHash(samplerHash);
+        //     }
+        // }
         const samplerInfo = info && info.samplerHash !== undefined
             ? Sampler.unpackFromHash(info.samplerHash) : textureBase && textureBase.getSamplerInfo();
         const sampler = this._device.getSampler(samplerInfo);
